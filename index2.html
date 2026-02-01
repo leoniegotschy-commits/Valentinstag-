@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Für dich ✨</title>
+
+  <style>
+    :root {
+      --bg: #f6f4f1;
+      --text: #1f1f1f;
+      --soft: #d8cfc4;
+      --accent: #b9a89a;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    section {
+      padding: 80px 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1, h2 {
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+
+    /* Fade-in */
+    .fade {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+
+    .fade.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    /* Surprise box */
+    .surprise {
+      background: var(--soft);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: background 0.3s ease;
+    }
+
+    .surprise:hover {
+      background: var(--accent);
+    }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .overlay-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 500px;
+      padding: 30px;
+      text-align: center;
+      position: relative;
+    }
+
+    .overlay img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 60px 20px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <section class="fade">
+    <h1>Für einen Menschen,<br>der mein Leben leiser & besser macht</h1>
+    <p>Das hier ist keine große Geste.  
+       Nur ein paar Dinge zum Entdecken.  
+       Nimm dir Zeit.</p>
+  </section>
+
+  <!-- MEMORY CARDS -->
+  <section class="fade">
+    <h2>Kleine Erinnerungen</h2>
+    <div class="cards">
+      <div class="card" onclick="openOverlay('img1.jpg','Ein Moment, der mir immer bleibt.')">Moment 1</div>
+      <div class="card" onclick="openOverlay('img2.jpg','Wir haben nicht viel gesagt – und genau das war gut.')">Moment 2</div>
+      <div class="card" onclick="openOverlay('img3.jpg','Danke für dieses Lachen.')">Moment 3</div>
+    </div>
+  </section>
+
+  <!-- SURPRISE -->
+  <section class="fade">
+    <h2>Klick nicht zu schnell</h2>
+    <div class="surprise" onclick="randomMessage()">
+      Tap me ✨
+    </div>
+    <p id="surpriseText"></p>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="fade">
+    <h2>Ein paar Bilder</h2>
+    <div class="gallery">
+      <img src="img1.jpg" onclick="openOverlay('img1.jpg','Ein guter Tag.')">
+      <img src="img2.jpg" onclick="openOverlay('img2.jpg','Mehr braucht es nicht.')">
+      <img src="img3.jpg" onclick="openOverlay('img3.jpg','Genau richtig.')">
+    </div>
+  </section>
+
+  <footer>
+    Danke, dass du du bist.
+  </footer>
+
+  <!-- OVERLAY -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-content">
+      <div class="close" onclick="closeOverlay()">×</div>
+      <img id="overlayImg" src="">
+      <p id="overlayText"></p>
+    </div>
+  </div>
+
+  <script>
+    // Fade-in on scroll
+    const fades = document.querySelectorAll('.fade');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.2 });
+
+    fades.forEach(f => observer.observe(f));
+
+    // Overlay
+    function openOverlay(img, text) {
+      document.getElementById('overlayImg').src = img;
+      document.getElementById('overlayText').innerText = text;
+      document.getElementById('overlay').style.display = 'flex';
+    }
+
+    function closeOverlay() {
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    // Surprise messages
+    const messages = [
+      "Du bist wichtiger, als du denkst.",
+      "Valentinstag ist auch für Menschen, die bleiben.",
+      "Ich bin froh, dass es dich gibt.",
+      "Danke für deine Ruhe.",
+      "Du machst Dinge leichter."
+    ];
+
+    function randomMessage() {
+      const msg = messages[Math.floor(Math.random() * messages.length)];
+      document.getElementById('surpriseText').innerText = msg;
+    }
+  </script>
+
+</body>
+</html>
